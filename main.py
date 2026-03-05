@@ -1,7 +1,7 @@
 from ursina import *
 app = Ursina()
 
-window.fullscreen = True
+window.fullscreen = False
 
 #Inspiré de Unity où on peut assigner des valeurs à des inputs comme des vecteurs 2d, float, bool etc
 input_actions = {
@@ -80,7 +80,7 @@ def Player_look_at_cursor(Player) :
 
 def input(key) :
     if key in input_actions["Attack"] :
-        raycast(Player.position, Player.up, debug = True)
+        raycast(Player.position, Player.up, ignore=[Player], debug = True)
 
 #Dans update(), essayer de mettre que des fonctions
 def update() :
