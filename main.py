@@ -38,11 +38,14 @@ def Camera_follow_player(Camera_follower, Player) :
 #               COMMUN                #
 #######################################
 
-def can_move(Entity, movement) :
-    hit_info = raycast(Entity.position, movement, distance=0.5,ignore= [Entity] , debug = True, color= color.green)
-    if hit_info.hit:
+def can_move(Entity, movement, marge_erreur) :
+    movement = movement.normalized()
+    hit_info1 = raycast(Entity.position + Vec2(movement.y * 0.5 * marge_erreur, movement.x * 0.5 * marge_erreur), movement, distance=0.5,ignore= [Entity])
+    hit_info2 = raycast(Entity.position - Vec2(movement.y * 0.5 * marge_erreur, movement.x * 0.5 * marge_erreur), movement, distance=0.5,ignore= [Entity])
+    if hit_info1.hit or hit_info2.hit:
         return False
     return True
+
 
 
 
@@ -57,7 +60,7 @@ def Player_movement(Player):
     for input in input_actions["Movement"].keys() :
         if held_keys[input] :
             direction = input_actions["Movement"][input] * player_info["speed"]
-            if can_move(Player, direction) :
+            if can_move(Player, direction, 0.9) :
                 Player.position += direction * time.dt
 
 def Player_look_at_cursor(Player) :
