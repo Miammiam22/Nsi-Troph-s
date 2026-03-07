@@ -6,10 +6,10 @@ window.fullscreen = False
 #Inspiré de Unity où on peut assigner des valeurs à des inputs comme des vecteurs 2d, float, bool etc
 input_actions = {
     "Movement" : {                      # Touches pour le déplacement du joueur
-        "left arrow"  : Vec2(-1, 0),    # |
-        "right arrow" : Vec2(1, 0),     # |
-        "up arrow"    : Vec2(0, 1),     # |
-        "down arrow"  : Vec2(0, -1)     # |
+        "a" :           Vec2(-1, 0),    # |
+        "d" :           Vec2(1, 0),     # |
+        "w" :           Vec2(0, 1),     # |
+        "s" :           Vec2(0, -1)     # |
     },
     "Attack" : [                        # Touches pour utiliser l'arme équipé
         "left mouse down",              # |
@@ -44,6 +44,7 @@ def Camera_follow_player(Camera_follower, Player) :
 #               COMMUN                #
 #######################################
 
+#ATTENTION : movement doit avoir une norme de 1
 def can_move(Entity, movement, marge_erreur) :
     size_x = Entity.scale.x / 2
     size_y = Entity.scale.y / 2
