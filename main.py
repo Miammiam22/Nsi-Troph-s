@@ -19,7 +19,11 @@ input_actions = {
 }
 
 
-wall = Entity(model="quad", position=Vec2(0, 2), scale=Vec2(5, 1), collider="box")
+
+Entity(name="mur haut", model="quad", position=Vec2(0, 2.5), scale=(5, 1), collider="box")
+Entity(name="mur bas", model="quad", position=Vec2(0, -2.5), scale=(5, 1), collider="box")
+Entity(name="mur droite", model="quad", position=Vec2(2.5, 0), scale=(1, 5), collider="box")
+Entity(name="mur gauche", model="quad", position=Vec2(-2.5, 0), scale=(1, 5), collider="box")
 
 
 
@@ -48,8 +52,8 @@ def Camera_follow_player(Camera_follower, Player) :
 def can_move(Entity, movement, marge_erreur) :
     size_x = Entity.scale.x / 2
     size_y = Entity.scale.y / 2
-    hit_info1 = raycast(Entity.position + Vec2(movement.y * size_x * marge_erreur, movement.x * size_x * marge_erreur), movement, distance=0.5,ignore= [Entity])
-    hit_info2 = raycast(Entity.position - Vec2(movement.y * size_y * marge_erreur, movement.x * size_y * marge_erreur), movement, distance=0.5,ignore= [Entity])
+    hit_info1 = raycast(Entity.position, Vec2(movement.y + movement.x - marge_erreur * movement.y, movement.y + movement.x - marge_erreur * movement.x), distance=0.5,ignore= [Entity], debug= True)
+    hit_info2 = raycast(Entity.position, Vec2(-movement.y + movement.x + marge_erreur * movement.y, movement.y - movement.x - marge_erreur * movement.x), distance=0.5,ignore= [Entity], debug= True)
     if hit_info1.hit or hit_info2.hit:
         return False
     return True
@@ -57,21 +61,49 @@ def can_move(Entity, movement, marge_erreur) :
 
 
 #######################################
+#                MONDE                #
+#######################################
+
+#code ici ---
+
+
+
+#######################################
 #               JOUEUR                #
 #######################################
 
-Player = Entity(model = "quad", collider = "sphere", texture = "assets/player_sprite.png")
+Player = Entity(model = "quad", collider = "box", texture = "assets/player_sprite.png")
 player_info = {"speed" : 5}
 
-def Player_movement(Player):
+def Player_movement(Player_ent):
     for input in input_actions["Movement"].keys() :
         if held_keys[input] :
             direction = input_actions["Movement"][input] * player_info["speed"]
-            if can_move(Player, input_actions["Movement"][input], 0.9) :
-                Player.position += direction * time.dt
+            if can_move(Player_ent, input_actions["Movement"][input], 0.2) :
+                Player_ent.position += direction * time.dt
 
-def Player_look_at_cursor(Player) :
-    Player.look_at_2d(mouse.position + Player.position)
+def Player_look_at_cursor(Player_ent) :
+    Player_ent.look_at_2d(mouse.position + Player_ent.position)
+
+def Player_update(Player_ent):
+    Player_movement(Player_ent)
+    Player_look_at_cursor(Player_ent)
+
+
+
+#######################################
+#              INTERFACE              #
+#######################################
+
+#code ici ---
+
+
+
+#######################################
+#               ENNEMI                #
+#######################################
+
+#code ici ---
 
 
 
@@ -85,8 +117,7 @@ def input(key) :
 
 #Dans update(), essayer de mettre que des fonctions
 def update() :
-    Player_movement(Player)
-    Player_look_at_cursor(Player)
+    Player_update(Player)
     Camera_follow_player(Camera_follower, Player)
 
 app.run()

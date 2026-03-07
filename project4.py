@@ -40,10 +40,11 @@ def peut_voir_joueur():
 
 def detecter_direction_mur():
     # détecte exactement quel côté est bloqué
-    hit_r = raycast(origin=ennemie["ent"].position, direction=(1,0,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
-    hit_l = raycast(origin=ennemie["ent"].position, direction=(-1,0,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
-    hit_u = raycast(origin=ennemie["ent"].position, direction=(0,1,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
-    hit_d = raycast(origin=ennemie["ent"].position, direction=(0,-1,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
+    hit_r = raycast(origin=ennemie["ent"].position, direction=(1,0,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]), debug = True)
+    hit_l = raycast(origin=ennemie["ent"].world_position, direction=(-1,0,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]), debug = True)
+    hit_u = raycast(origin=ennemie["ent"].position, direction=(0,1,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]), debug = True)
+    hit_d = raycast(origin=ennemie["ent"].position, direction=(0,-1,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]), debug = True)
+    print(hit_l.hit, hit_r.hit, hit_u.hit, hit_d.hit)
     if hit_r.hit: return ("vertical", "droite")    # mur à droite → longer sur Y
     if hit_l.hit: return ("vertical", "gauche")    # mur à gauche → longer sur Y
     if hit_u.hit: return ("horizontal", "haut")    # mur en haut → longer sur X
@@ -66,17 +67,6 @@ def longer_mur():
         hit = raycast(origin=ennemie["ent"].position, direction=(0,1,0) if cote == "haut" else (0,-1,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
         mur_detecte = hit.hit
     
-    if dir_mur == "vertical":
-        # mur sur le côté, on longe sur Y
-        ennemie["ent"].y -= d
-        hit = raycast(origin=ennemie["ent"].position, direction=(1,0,0) if cote == "droite" else (-1,0,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
-        mur_detecte = hit.hit
-    else:
-        # mur en haut/bas, on longe sur X
-        ennemie["ent"].x += d
-        hit = raycast(origin=ennemie["ent"].position, direction=(0,1,0) if cote == "haut" else (0,-1,0), distance=1.2, ignore=(ennemie["ent"], joueur["ent"]))
-        mur_detecte = hit.hit
-   
     if mur_detecte:
         ennemie["timer_inertie"] = 0.2
     else:
