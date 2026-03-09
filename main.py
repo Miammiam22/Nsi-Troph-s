@@ -20,10 +20,10 @@ input_actions = {
 
 
 
-Entity(name="mur haut", model="quad", position=Vec2(0, 2.5), scale=(5, 1), collider="box")
-Entity(name="mur bas", model="quad", position=Vec2(0, -2.5), scale=(5, 1), collider="box")
-Entity(name="mur droite", model="quad", position=Vec2(2.5, 0), scale=(1, 5), collider="box")
-Entity(name="mur gauche", model="quad", position=Vec2(-2.5, 0), scale=(1, 5), collider="box")
+Entity(name="mur haut", model="quad", position=Vec2(0, 5), scale=(10, 1), collider="box")
+Entity(name="mur bas", model="quad", position=Vec2(0, -5), scale=(10, 1), collider="box")
+Entity(name="mur droite", model="quad", position=Vec2(5, 0), scale=(1, 10), collider="box")
+Entity(name="mur gauche", model="quad", position=Vec2(-5, 0), scale=(1, 10), collider="box")
 
 
 
