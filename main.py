@@ -33,7 +33,7 @@ Entity(name="mur gauche", model="quad", position=Vec2(-5, 0), scale=(1, 10), col
 
 #Change le parent de la camera pour qu'elle puisse se déplacé et ainsi pouvoir avoir un monde 
 Camera_follower = Entity()
-camera_info = {"init_fov" : 60, "mouse_effect" : 1.5}
+camera_info = {"init_fov" : 60, "mouse_effect" : 1.5, "shot_effect" : 1.1}
 
 #Initialisation des paramètres de la camera
 camera.parent = Camera_follower
@@ -57,6 +57,10 @@ def can_move(Entity, movement, marge_erreur) :
     if hit_info1.hit or hit_info2.hit:
         return False
     return True
+
+def shot_vfx(position) :
+    vfx = Entity(model = "quad", scale = (0.5, 0.5), position = position + Vec3(0,0,-0.1), texture = "assets/shot_vfx.png")
+    destroy(vfx, 0.05)
 
 
 
@@ -113,7 +117,8 @@ def Player_update(Player_ent):
 
 def input(key) :
     if key in input_actions["Attack"] :
-        raycast(Player.position, Player.up, ignore=[Player], debug = True)
+        hit_info = raycast(Player.position, Player.up, ignore=[Player])
+        shot_vfx(hit_info.world_point)
 
 #Dans update(), essayer de mettre que des fonctions
 def update() :
