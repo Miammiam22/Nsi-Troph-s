@@ -20,6 +20,7 @@ input_actions = {
 
 
 wall = Entity(model="quad", position=Vec2(0, 2), scale=Vec2(5, 1), collider="box")
+ennemie = Entity(model="quad",position=(5,0),scale=(1,1),collider="box",texture = "assets/ennemie_sprite.png")
 
 
 
@@ -52,8 +53,12 @@ def can_move(Entity, movement, marge_erreur) :
     if hit_info1.hit or hit_info2.hit:
         return False
     return True
-
-
+def input(key):
+    if key in input_actions["Attack"]:
+        hit_shoot = raycast(Player.position, Player.up, ignore=[Player], debug=True)
+        if hit_shoot.entity == ennemie:
+            ennemie.enabled = False  # quand on destroy chiant ça plante
+            
 
 #######################################
 #               JOUEUR                #
@@ -71,6 +76,18 @@ def Player_movement(Player):
 
 def Player_look_at_cursor(Player) :
     Player.look_at_2d(mouse.position + Player.position)
+#######################################
+#               ENNEMIE               #
+#######################################
+def vers_le_joueur():
+    if ennemie.enabled:
+        dir_vector = Player.position - ennemie.position
+        if dir_vector.length() > 0:
+            if can_move(ennemie,dir_vector, 0.9):
+                dir_vector = dir_vector.normalized() * 2 * time.dt
+                ennemie.position += Vec3(dir_vector.x, dir_vector.y, 0)
+def ennemie_look_at_playeur():
+    ennemie.look_at_2d(Player.position)
 
 
 
@@ -78,9 +95,6 @@ def Player_look_at_cursor(Player) :
 #          FONCTIONS URSINA           #
 #######################################
 
-def input(key) :
-    if key in input_actions["Attack"] :
-        raycast(Player.position, Player.up, ignore=[Player], debug = True)
 
 #Dans update(), essayer de mettre que des fonctions
 def update() :
@@ -88,4 +102,7 @@ def update() :
     Player_look_at_cursor(Player)
     Camera_follow_player(Camera_follower, Player)
 
+    #ennemie:
+    vers_le_joueur()
+    ennemie_look_at_playeur()
 app.run()
