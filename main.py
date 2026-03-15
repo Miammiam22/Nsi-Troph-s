@@ -13,8 +13,11 @@ input_actions = {
     },
     "Attack" : [                        # Touches pour utiliser l'arme équipé
         "left mouse down",              # |
-        "space"                         # |
-    ]
+    ],
+    "Aim" : {
+        "right mouse down" : 1,
+        "right mouse up" : 0
+    }
     
 }
 
@@ -32,7 +35,7 @@ ennemie = Entity(model="quad",position=(5,0),scale=(1,1),collider="box",texture 
 
 #Change le parent de la camera pour qu'elle puisse se déplacé et ainsi pouvoir avoir un monde 
 Camera_follower = Entity()
-camera_info = {"init_fov" : 60, "mouse_effect" : 1.6, "shot_effect" : 1.1}
+camera_info = {"init_fov" : 60, "mouse_effect" : 1.6, "aim_fov_effect" : 15}
 
 #Initialisation des paramètres de la camera
 camera.parent = Camera_follower
@@ -41,6 +44,8 @@ camera.fov = camera_info["init_fov"]
 def Camera_follow_player(Camera_follower, Player) :
     Camera_follower.position = Player.position + mouse.position * camera_info["mouse_effect"]
 
+def Camera_aim(facteur):
+    camera.fov = camera_info["init_fov"] - camera_info["aim_fov_effect"] * facteur
 
 
 #######################################
@@ -107,7 +112,6 @@ def Player_update(Player_ent):
 def vers_le_joueur():
     if ennemie.enabled:
         dir_vector = Player.position - ennemie.position
-        print(dir_vector)
         if dir_vector.length() > 0:
             if can_move(ennemie,dir_vector, 0.9):
                 dir_vector = dir_vector.normalized() * 2 * time.dt
@@ -123,6 +127,9 @@ def ennemie_look_at_player():
 #######################################
 
 def input(key) :
+    if key in input_actions["Aim"] :
+        Camera_aim(input_actions["Aim"][key])
+
     if key in input_actions["Attack"] :
         hit_shoot = raycast(Player.position, Player.up, ignore=[Player])
         shot_vfx(hit_shoot.world_point)
